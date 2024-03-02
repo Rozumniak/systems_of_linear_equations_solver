@@ -45,7 +45,8 @@ def gauss(new_matrix, matrix):
     while i > -1:
         print(f"x{i+1} = {solution[i]}")
         i -= 1
-
+    test(rows, cols, solution, matrix)
+def test(rows, cols, solution, matrix):
     print("\nПеревірка:")
     result = [[], [], []]
     for i in range(min(rows, cols)):
@@ -58,6 +59,8 @@ def gauss(new_matrix, matrix):
     for sublist in result:
         print(f"{sublist[0]} + {sublist[1]} + {sublist[2]} = {sublist[3]}")
 
+    measurement_error(matrix, result)
+
 def make_diagonal(matrix):
     new_matrix = make_triangle(matrix)
     rows = len(new_matrix)
@@ -69,10 +72,26 @@ def make_diagonal(matrix):
                 factor = new_matrix[k][i]
                 for j in range(cols):
                     new_matrix[k][j] -= factor * new_matrix[i][j]
-
     for row in new_matrix:
         print(row)
+
+    print("\nКорені:")
+    solution = []
+    for i in range(0,3):
+        solution.append(new_matrix[i][3])
+        print(f"x{i + 1} = {solution[i]}")
+    test(rows, cols, solution, matrix)
     return new_matrix
+
+def measurement_error(matrix, roots):
+    matrix_roots = []
+    my_roots = []
+    print("\nПохибка:")
+    for i in range(0,3):
+        matrix_roots.append(matrix[i][3])
+        my_roots.append(roots[i][3])
+        print(f"|{matrix_roots[i]} - {my_roots[i]}| = {abs(my_roots[i] - matrix_roots[i])}")
+
 def main():
     print("Комп'ютерний практикум №2 \nВаріант №11 \nстудент групи ПБ-21 \nРозумняк Руслан")
     matrix = [
