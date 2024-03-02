@@ -58,6 +58,21 @@ def gauss(new_matrix, matrix):
     for sublist in result:
         print(f"{sublist[0]} + {sublist[1]} + {sublist[2]} = {sublist[3]}")
 
+def make_diagonal(matrix):
+    new_matrix = make_triangle(matrix)
+    rows = len(new_matrix)
+    cols = len(new_matrix[0])
+    print("\nПриведення матриці до діагонального вигляду:")
+    for i in range(min(rows, cols)):
+        for k in range(rows):
+            if k != i:
+                factor = new_matrix[k][i]
+                for j in range(cols):
+                    new_matrix[k][j] -= factor * new_matrix[i][j]
+
+    for row in new_matrix:
+        print(row)
+    return new_matrix
 def main():
     print("Комп'ютерний практикум №2 \nВаріант №11 \nстудент групи ПБ-21 \nРозумняк Руслан")
     matrix = [
@@ -67,8 +82,8 @@ def main():
     ]
     print("\n___ Метод Гаусса ___")
     gauss(make_triangle(matrix), matrix)
-
-
+    print("\n___ Метод Жордана-Гаусса ___")
+    make_diagonal(matrix)
 if __name__ == '__main__':
     main()
 
