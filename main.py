@@ -91,7 +91,79 @@ def measurement_error(matrix, roots):
     for i in range(0,3):
         matrix_roots.append(matrix[i][3])
         my_roots.append(roots[i][3])
-        print(f"x{i} = |{matrix_roots[i]} - {my_roots[i]}| = {abs(my_roots[i] - matrix_roots[i])}")
+        print(f"Δx{i+1} = |{matrix_roots[i]} - {my_roots[i]}| = {abs(my_roots[i] - matrix_roots[i])}")
+
+def optimal(matrix):
+    new_matrix = copy.deepcopy(matrix)
+
+    rows = len(new_matrix)
+    cols = len(new_matrix[0])
+
+    max_value = 0
+    index = -1
+    # 1 строка
+    for i in range(min(rows, cols)):
+        if max_value < abs(new_matrix[0][i]):
+            max_value = new_matrix[0][i]
+            index = i
+    print(f"\nМаксимальне значення у першому рядку за модулем = {max_value}")
+    for i in range(cols):
+        new_matrix[0][i] = new_matrix[0][i]/max_value
+    copy_matrix = copy.deepcopy(new_matrix)
+    print_matrix(copy_matrix)
+    # 2 строка____________________________________________
+
+    for i in range(cols):
+        copy_matrix[1][i] -= new_matrix[0][i] * new_matrix[1][1]
+    new_matrix = copy.deepcopy(copy_matrix)
+    max_value = 0
+    for i in range(min(rows, cols)):
+        if max_value < abs(copy_matrix[1][i]):
+            max_value = abs(copy_matrix[1][i])
+    print(f"\nМаксимальне значення у другому рядку за модулем = {max_value}")
+    print_matrix(copy_matrix)
+    for i in range(cols):
+        copy_matrix[1][i] /= -max_value
+
+    # 3 строка__________________________
+    for i in range(cols):
+        copy_matrix[2][i] -= new_matrix[0][i] * new_matrix[2][1]
+    new_matrix = copy.deepcopy(copy_matrix)
+    max_value = 0
+    for i in range(min(rows, cols)):
+        if max_value < abs(copy_matrix[2][i]):
+            max_value = abs(copy_matrix[2][i])
+            index = i
+    print(f"\nМаксимальне значення у третьому рядку за модулем = {max_value}")
+    print_matrix(copy_matrix)
+    for i in range(cols):
+        copy_matrix[0][i] -= new_matrix[1][i] * new_matrix[0][0]
+        copy_matrix[2][i] -= new_matrix[1][i] * new_matrix[2][0]
+    new_matrix = copy.deepcopy(copy_matrix)
+    for i in range(cols):
+        copy_matrix[2][i] = new_matrix[2][i]/max_value
+    new_matrix = copy.deepcopy(copy_matrix)
+    for i in range(cols):
+        copy_matrix[0][i] -= new_matrix[2][i] * new_matrix[0][2]
+
+    print_matrix(copy_matrix)
+
+    print("\nКорені:")
+    solution = []
+    solution.append(copy_matrix[1][3])
+    solution.append(copy_matrix[0][3])
+    solution.append(copy_matrix[2][3])
+    for i in range(0, 3):
+        print(f"x{i + 1} = {solution[i]}")
+    test(rows, cols, solution, matrix)
+    return copy_matrix
+
+
+
+def print_matrix(matrix):
+    print("\n")
+    for row in matrix:
+        print(row)
 
 def main():
     print("Комп'ютерний практикум №2 \nВаріант №11 \nстудент групи ПБ-21 \nРозумняк Руслан")
@@ -107,6 +179,9 @@ def main():
     print("\n___ Метод Жордана-Гаусса ___")
     gordan(matrix)
     print("\n___Метод оптимального виключення___")
+    optimal(matrix)
+
+
 
 if __name__ == '__main__':
     main()
