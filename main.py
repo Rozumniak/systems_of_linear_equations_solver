@@ -1,4 +1,5 @@
 import copy
+import numpy as np
 
 def make_triangle(matrix):
     new_matrix = copy.deepcopy(matrix)
@@ -95,7 +96,6 @@ def measurement_error(matrix, roots):
 
 def optimal(matrix):
     new_matrix = copy.deepcopy(matrix)
-
     rows = len(new_matrix)
     cols = len(new_matrix[0])
 
@@ -158,6 +158,60 @@ def optimal(matrix):
     test(rows, cols, solution, matrix)
     return copy_matrix
 
+def simple_iterations(matrix):
+    new_matrix = copy.deepcopy(matrix)
+    rows = len(new_matrix)
+    cols = len(new_matrix[0])
+    print("\nПочаткова матриця")
+    print_matrix(new_matrix)
+    for i in range(rows):
+        diag_elem = abs(new_matrix[i][i])
+        sum_except_diag = sum(abs(x) for j, x in enumerate(new_matrix[i]) if j != i) - abs(new_matrix[i][3])
+        if round(diag_elem, 1) == round(sum_except_diag, 1):
+            print(f"{round(diag_elem, 3)} ={round(sum_except_diag, 3)} - умова не виконується")
+        elif round(diag_elem, 1) > round(sum_except_diag, 1):
+            print(f"{round(diag_elem, 3)} > {round(sum_except_diag, 3)} - умова виконується")
+        elif round(diag_elem, 1) < round(sum_except_diag, 1):
+            print(f"{round(diag_elem, 3)} < {round(sum_except_diag, 3)} - умова не виконується")
+        print("Приведемо систему рівнянь до виду, що забезпечує збіжність методу простих ітерацій.\n")
+    for i in range(rows - 2):
+        print("Приведення до верхньотрикутного вигляду:")
+        print_matrix(new_matrix)
+        for i in range(len(matrix[0])):
+            new_matrix[0][i] = (new_matrix[0][i] / 2.1)
+        print_matrix(new_matrix)
+        for i in range(len(matrix[0])):
+            new_matrix[1][i] = new_matrix[1][i] - new_matrix[0][i] * 1.9
+            new_matrix[2][i] = new_matrix[2][i] - new_matrix[0][i] * 7.5
+        print_matrix(new_matrix)
+        for i in range(len(matrix[0])):
+            new_matrix[0][i] = (new_matrix[0][i] * 5)
+            new_matrix[2][i] = new_matrix[2][i] + new_matrix[1][i] * 5
+        print_matrix(new_matrix)
+        for i in range(len(matrix[0])):
+            new_matrix[0][i] = new_matrix[0][i] - new_matrix[1][i] * 8
+        print_matrix(new_matrix)
+        for i in range(rows):
+            diagonal_element = abs(new_matrix[i][i])
+            sum_except_diagonal = sum(abs(x) for j, x in enumerate(new_matrix[i])
+                                  if j != i) - abs(new_matrix[i][3])
+            print(f"{round(diagonal_element, 3)} > {round(sum_except_diagonal, 3)}")
+    print("")
+    x1 = 0
+    x2 = 0
+    x3 = 0
+    for i in range(10):
+        x1 = (-1 * new_matrix[0][1] * x2 + (- 1 * new_matrix[0][2]) * x3 - 14.885) / 5
+        x2 = (-1 * new_matrix[1][2] * x3 + 1.92) / 0.567
+        x3 = ((-1 * new_matrix[2][1] * x2) + 14.49) / 4.918
+        print(f"Ітерація №{i + 1}; i = {i}")
+        print(f"x1^{i} = {x1}\nx2^{i} = {x2}\nx3^{i} = {x3}\n")
+    print(f"Корені:")
+    solution = [x1,x2,x3]
+    for i in range(0, 3):
+        solution.append(new_matrix[i][3])
+        print(f"x{i + 1} = {solution[i]}")
+    test(rows, cols, solution, matrix)
 
 
 def print_matrix(matrix):
@@ -180,7 +234,8 @@ def main():
     gordan(matrix)
     print("\n___Метод оптимального виключення___")
     optimal(matrix)
-
+    print("\n___Метод простих ітерацій___")
+    simple_iterations(matrix)
 
 
 if __name__ == '__main__':
