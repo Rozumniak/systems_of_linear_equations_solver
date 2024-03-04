@@ -46,6 +46,7 @@ def gauss(new_matrix, matrix):
         print(f"x{i+1} = {solution[i]}")
         i -= 1
     test(rows, cols, solution, matrix)
+
 def test(rows, cols, solution, matrix):
     print("\nПеревірка:")
     result = [[], [], []]
@@ -61,7 +62,7 @@ def test(rows, cols, solution, matrix):
 
     measurement_error(matrix, result)
 
-def make_diagonal(matrix):
+def gordan(matrix):
     new_matrix = make_triangle(matrix)
     rows = len(new_matrix)
     cols = len(new_matrix[0])
@@ -90,19 +91,23 @@ def measurement_error(matrix, roots):
     for i in range(0,3):
         matrix_roots.append(matrix[i][3])
         my_roots.append(roots[i][3])
-        print(f"|{matrix_roots[i]} - {my_roots[i]}| = {abs(my_roots[i] - matrix_roots[i])}")
+        print(f"x{i} = |{matrix_roots[i]} - {my_roots[i]}| = {abs(my_roots[i] - matrix_roots[i])}")
 
 def main():
     print("Комп'ютерний практикум №2 \nВаріант №11 \nстудент групи ПБ-21 \nРозумняк Руслан")
+
     matrix = [
         [2.1, 2.8, 1.9, 0.2],
         [1.9, 3.1, 2.1, 2.1],
         [7.5, 3.8, 9.8, 5.6],
     ]
+
     print("\n___ Метод Гаусса ___")
     gauss(make_triangle(matrix), matrix)
     print("\n___ Метод Жордана-Гаусса ___")
-    make_diagonal(matrix)
+    gordan(matrix)
+    print("\n___Метод оптимального виключення___")
+
 if __name__ == '__main__':
     main()
 
